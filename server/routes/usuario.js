@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const Usuario = require('../models/usuario');
 
 app.get('/', function(req, res) {
     res.json('holaaaa ');
@@ -11,16 +12,26 @@ app.get('/usuario', function(req, res) {
 // POST crear nuevos registros 
 app.post('/usuario', function(req, res) {
     let body = req.body;
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: 'el nombre es necesario'
-        })
-    } else {
+
+    let usuario = new Usuario({
+        nombre: body.nombre,
+        email: body.email,
+        password: body.password,
+        role: body.role
+    });
+    //como lo grabamos en la base de datos?
+    usuario.save((err, usuariDB) => {
+        if (err) {
+            return res.status(400).json({
+                ok: false,
+                err
+            });
+        }
         res.json({
-            bodypersona: body
+            ok: true,
+            usuario: usuariDB
         });
-    }
+    });
 });
 // PUT actualizar data, registros
 app.put('/usuario/:id', function(req, res) {
