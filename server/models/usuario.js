@@ -6,7 +6,6 @@ let rolesValidos = {
     message: '{VALUE} no es un rol válido' //lo que escriba la persona va a ser VALUE
 
 }
-
 let Schema = mongoose.Schema;
 
 let usuarioSchema = new Schema({
@@ -41,6 +40,13 @@ let usuarioSchema = new Schema({
         default: false
     }
 });
+
+usuarioSchema.methods.toJSON = function() {
+    let user = this;
+    let userObject = user.toObject();
+    delete userObject.password;
+    return userObject;
+}
 
 usuarioSchema.plugin(uniqueValidator, { message: '{PATH} debe de ser único' });
 

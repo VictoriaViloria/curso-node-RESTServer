@@ -1,4 +1,6 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+
 const app = express();
 const Usuario = require('../models/usuario');
 
@@ -16,7 +18,7 @@ app.post('/usuario', function(req, res) {
     let usuario = new Usuario({
         nombre: body.nombre,
         email: body.email,
-        password: body.password,
+        password: bcrypt.hashSync(body.password, 10),
         role: body.role
     });
     //como lo grabamos en la base de datos?
@@ -27,6 +29,7 @@ app.post('/usuario', function(req, res) {
                 err
             });
         }
+        // usuariDB.password = null;
         res.json({
             ok: true,
             usuario: usuariDB
