@@ -1,5 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const _ = require('underscore');
+
 
 const app = express();
 const Usuario = require('../models/usuario');
@@ -39,8 +41,12 @@ app.post('/usuario', function(req, res) {
 // PUT actualizar data, registros
 app.put('/usuario/:id', function(req, res) {
     let id = req.params.id;
-    let body = req.body;
-    Usuario.findByIdAndUpdate(id, body, { new: true }, (err, usuarioDB) => {
+    let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
+    // se podria  hacer asi el arreglo anterior SON LAS QUE SI SE PUEDEN actualizar
+    //delete body.password;
+    //delete body.google;
+    //let body = req.body;
+    Usuario.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, usuarioDB) => {
 
         if (err) {
             return res.status(400).json({
