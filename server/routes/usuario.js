@@ -15,6 +15,7 @@ app.get('/usuario', function(req, res) {
     desde = Number(desde);
     let limite = req.query.limite || 3;
     limite = Number(limite);
+    //Usuario.find({ google: true })
     Usuario.find({})
         .skip(desde)
         .limit(limite)
@@ -25,9 +26,14 @@ app.get('/usuario', function(req, res) {
                     err
                 });
             }
-            res.json({
-                ok: true,
-                usuarios: usuarios
+            //  Usuario.count({ google: true }, (err, conteo) => {
+            Usuario.count({}, (err, conteo) => {
+                res.json({
+                    ok: true,
+                    usuarios,
+                    cuantos: conteo
+                })
+
             });
         });
     //.exec ejecutar ese find
