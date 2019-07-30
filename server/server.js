@@ -10,7 +10,13 @@ app.use(bodyParser.urlencoded({ extended: false }))
     // parse application/json
 app.use(bodyParser.json())
 
-app.use(require('./routes/usuario'));
+
+//configuracion GLOBAL de RUTAS
+app.use(require('./routes/index.js'));
+
+
+//app.use(require('./routes/usuario'));
+//app.use(require('./routes/login'));
 
 //mongoose.connect('mongodb://localhost:27017/cafe', { useNewUrlParser: true, useCreateIndex: true },
 mongoose.connect(process.env.URLDB, { useNewUrlParser: true, useCreateIndex: true },
