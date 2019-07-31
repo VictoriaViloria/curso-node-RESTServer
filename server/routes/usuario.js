@@ -4,12 +4,14 @@ const _ = require('underscore');
 
 const app = express();
 const Usuario = require('../models/usuario');
+const { verificaToken } = require('../middlewares/autenticacion');
+
 
 app.get('/', function(req, res) {
     res.json('holaaaa ');
 });
 //n GET se pueden actualizar registros
-app.get('/usuario', function(req, res) {
+app.get('/usuario', verificaToken, (req, res) => {
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
