@@ -13,6 +13,12 @@ app.get('/', function(req, res) {
 //n GET se pueden actualizar registros
 app.get('/usuario', verificaToken, (req, res) => {
 
+    return res.json({
+        usuario: req.usuario,
+        nombre: req.usuario.nombre,
+        email: req.usuario.email,
+    })
+
     let desde = req.query.desde || 0;
     desde = Number(desde);
     let limite = req.query.limite || 3;
@@ -43,7 +49,7 @@ app.get('/usuario', verificaToken, (req, res) => {
     // res.json('get usuario LOCAL !!!!!ji ji');
 });
 // POST crear nuevos registros 
-app.post('/usuario', function(req, res) {
+app.post('/usuario', verificaToken, function(req, res) {
     let body = req.body;
 
     let usuario = new Usuario({
@@ -68,7 +74,7 @@ app.post('/usuario', function(req, res) {
     });
 });
 // PUT actualizar data, registros
-app.put('/usuario/:id', function(req, res) {
+app.put('/usuario/:id', verificaToken, function(req, res) {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
     // se podria  hacer asi el arreglo anterior SON LAS QUE SI SE PUEDEN actualizar
@@ -90,7 +96,7 @@ app.put('/usuario/:id', function(req, res) {
     })
 });
 //DELETE
-app.delete('/usuario/:id', function(req, res) {
+app.delete('/usuario/:id', verificaToken, function(req, res) {
     let id = req.params.id;
 
     let cambiaEstado = {
