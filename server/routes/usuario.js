@@ -4,7 +4,7 @@ const _ = require('underscore');
 
 const app = express();
 const Usuario = require('../models/usuario');
-const { verificaToken } = require('../middlewares/autenticacion');
+const { verificaToken, VerificaAdmin_Role } = require('../middlewares/autenticacion');
 
 
 app.get('/', function(req, res) {
@@ -13,11 +13,11 @@ app.get('/', function(req, res) {
 //n GET se pueden actualizar registros
 app.get('/usuario', verificaToken, (req, res) => {
 
-    return res.json({
-        usuario: req.usuario,
-        nombre: req.usuario.nombre,
-        email: req.usuario.email,
-    })
+    // return res.json({
+    //     usuario: req.usuario,
+    //     nombre: req.usuario.nombre,
+    //     email: req.usuario.email,
+    // })
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
@@ -49,7 +49,7 @@ app.get('/usuario', verificaToken, (req, res) => {
     // res.json('get usuario LOCAL !!!!!ji ji');
 });
 // POST crear nuevos registros 
-app.post('/usuario', verificaToken, function(req, res) {
+app.post('/usuario', [verificaToken, VerificaAdmin_Role], function(req, res) {
     let body = req.body;
 
     let usuario = new Usuario({
@@ -74,7 +74,7 @@ app.post('/usuario', verificaToken, function(req, res) {
     });
 });
 // PUT actualizar data, registros
-app.put('/usuario/:id', verificaToken, function(req, res) {
+app.put('/usuario/:id', [verificaToken, VerificaAdmin_Role], function(req, res) {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
     // se podria  hacer asi el arreglo anterior SON LAS QUE SI SE PUEDEN actualizar
@@ -96,7 +96,7 @@ app.put('/usuario/:id', verificaToken, function(req, res) {
     })
 });
 //DELETE
-app.delete('/usuario/:id', verificaToken, function(req, res) {
+app.delete('/usuario/:id', [verificaToken, VerificaAdmin_Role], function(req, res) {
     let id = req.params.id;
 
     let cambiaEstado = {
